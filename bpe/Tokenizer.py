@@ -1,8 +1,25 @@
+import os
+import pickle
 
 class Tokenizer:
     def __init__(self):
         self.merge_map: dict = {}
         self.decode_map: dict = {}
+
+    def save(self, save_path):
+        if not os.path.exists(save_path):
+            os.makedirs(save_path)
+
+        with open(save_path + 'merge_map.pkl', 'wb') as file:
+            pickle.dump(self.merge_map, file)
+        with open(save_path + 'decode_map.pkl', 'wb') as file:
+            pickle.dump(self.decode_map, file)
+
+    def load(self, load_path):
+        with open(load_path + 'merge_map.pkl', 'rb') as file:
+            self.merge_map = pickle.load(file)
+        with open(load_path + 'decode_map.pkl', 'rb') as file:
+            self.decode_map = pickle.load(file)
 
     def train(self, text: str, vocab_size: int) -> None:
         """
