@@ -60,7 +60,7 @@ class Tokenizer:
         """
         ids = self.text2bin(text)
         while len(ids) > 1:
-            pair = min(ids, key=lambda p:self.merge_map.get(p, len(self.merge_map)))
+            pair = min(self.get_frequency(ids), key=lambda p:self.merge_map.get(p, len(self.decode_map)))
             if pair not in self.merge_map:
                 # nothing to merge
                 break
