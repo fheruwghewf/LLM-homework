@@ -18,6 +18,9 @@ test_content2 = '博士学位论文应当表明作者具有独立从事科学研
 # tokenizer from hugging face
 from tokenizers import Tokenizer
 tokenizer: Tokenizer = Tokenizer.from_pretrained("gpt2")
+# or 
+# tokenizer.save('gpt2_model/gpt2_tokenizer')
+# tokenizer: Tokenizer = Tokenizer.from_file('gpt2_model/gpt2_tokenizer')
 
 print('test1:')
 print('my encoder: len = ', len(t.encode(test_content)))
