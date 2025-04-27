@@ -6,7 +6,9 @@ class Tokenizer:
         self.merge_map: dict = {}
         self.decode_map: dict = {}
 
-    def save(self, save_path):
+    def save(self, save_path: str):
+        if not save_path.endswith('/'):
+            save_path += '/'
         if not os.path.exists(save_path):
             os.makedirs(save_path)
 
@@ -15,7 +17,9 @@ class Tokenizer:
         with open(save_path + 'decode_map.pkl', 'wb') as file:
             pickle.dump(self.decode_map, file)
 
-    def load(self, load_path):
+    def load(self, load_path: str):
+        if not load_path.endswith('/'):
+            load_path += '/'
         with open(load_path + 'merge_map.pkl', 'rb') as file:
             self.merge_map = pickle.load(file)
         with open(load_path + 'decode_map.pkl', 'rb') as file:
