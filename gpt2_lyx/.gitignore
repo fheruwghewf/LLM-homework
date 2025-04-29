@@ -1,3 +1,4 @@
 data/
 gpt2_model/
+gpt2_tokenizer/
 test.py
