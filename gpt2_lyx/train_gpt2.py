@@ -90,6 +90,26 @@ class GPT(nn.Module):
         ))
         self.lm_head = nn.Linear(config.n_embd, config.vocab_size, bias=False)
 
+    def forward(self, idx: torch.Tensor, targets: torch.Tensor=None):
+        # idx is of shape (B, T)
+        B, T = idx.size()
+        assert T <= self.config.block_size, f"Cannot forward sequence of length {T}, block size is only {self.config.block_size}"
+        # forward the token and position embeddings
+        pos = torch.arange(0, T, dtype=torch.long, device=idx.device)
+        pos_emb = self.transformer.wpe(pos)
+        tok_emb = self.transformer.wte(idx)
+        x = tok_emb + pos_emb
+        # forward the blocks of transformer
+        for block in self.transformer.h:
+            x = block(x)
+        # forward the final layernorm and classifier
+        x = self.transformer.ln_f(x)
+        logits: torch.Tensor = self.lm_head(x) # (B, T, vocab_size)
+        loss = None
+        if targets is not None:
+            loss: torch.Tensor = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1))
+        return logits, loss
+
     @classmethod
     def from_pretrain(cls, model_type: str):
         '''Loads pretrained GPT-2 model weights from huggingface'''
@@ -142,3 +162,85 @@ class GPT(nn.Module):
 
         return model
                 
+
+from tokenizers import Tokenizer, Encoding
+tokenizer: Tokenizer = Tokenizer.from_file('gpt2_lyx/gpt2_tokenizer/gpt2_tokenizer')
+
+
+device = 'cpu'
+if torch.cuda.is_available():
+    device = 'cuda'
+elif hasattr(torch.backends, 'mps') and torch.backends.mps.is_available():
+    device = 'mps'
+print(f'using device: ', device)
+
+with open('gpt2_lyx/data/input.txt', 'r') as f:
+    text = f.read()
+
+text = text[:1000]
+tokens_encoding: Encoding = tokenizer.encode(text)
+tokens = tokens_encoding.ids
+B, T = 4, 32
+buf = torch.tensor(tokens[:B*T + 1])
+buf = buf.to(device)
+x = buf[:-1].view(B, T)
+y = buf[1:].view(B, T)
+
+model = GPT(GPTConfig())
+model.to(device)
+logits, loss = model(x, y)
+print(loss)
+
+# optimizer!
+optimizer = torch.optim.AdamW(model.parameters(), lr=3e-4)
+for i in range(50):
+    optimizer.zero_grad()
+    logits, loss = model(x, y)
+    loss: torch.Tensor
+    loss.backward()
+    optimizer.step()
+    print(f'step {i}, loss: {loss.item()}')
+
+
+exit(0)
+
+
+num_return_sequences = 5
+max_length = 30
+
+# model = GPT.from_pretrain('gpt2')
+model = GPT(GPTConfig())
+print(1)
+model.eval()
+model.to(device)
+
+tokens_encoding = tokenizer.encode("Hello, I'm a launage model,")
+tokens = torch.tensor(tokens_encoding.ids, dtype=torch.long)
+tokens = tokens.unsqueeze(0).repeat(num_return_sequences, 1)
+x = tokens.to(device)
+
+torch.manual_seed(42)
+torch.cuda.manual_seed(42)
+while x.size(1) < max_length:
+    # forward the model to get the logits
+    with torch.no_grad():
+        print('sampling...', x.size(1) - 8)
+        logits = model(x)
+        # take the logits at the last position
+        logits = logits[:, -1, :]
+        # get the probabilities
+        probs = F.softmax(logits, dim=-1)
+        # do top-k sampling of 50 (huggingface default)
+        # topk_probs here become (5, 50), topk_indices is (5, 50)
+        topk_probs, topk_indicies = torch.topk(probs, 50, dim=-1)
+        # select a token from the top-k probabilities
+        ix = torch.multinomial(topk_probs, 1)
+        # gather the corresponding indicies
+        xcol = torch.gather(topk_indicies, -1, ix)
+        # append to the sequency
+        x = torch.cat((x, xcol), dim=1)
+
+for i in range(num_return_sequences):
+    tokens = x[i].tolist()
+    decoded = tokenizer.decode(tokens)
+    print('>', decoded)
