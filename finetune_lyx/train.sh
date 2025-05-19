@@ -17,4 +17,4 @@ python finetune_lyx/train.py \
     --eval_batch_size 16 \
     --eval_ratio 0.01 \
     --eval_interval 100 \
-    --output_dir_name finetune_lyx/gpt2-alpaca
+    --output_dir_name gpt2-alpaca

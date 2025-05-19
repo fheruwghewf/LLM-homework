@@ -29,7 +29,7 @@ class Trainer:
         self.args.total_train_steps = (self.args.epochs * len(self.train_dataloader)) // self.args.gradient_accumulation_steps
         self.args.total_eval_steps = len(self.eval_dataloader)
         self.args.num_warmup_steps = int(self.args.lr_warmup_ratio * self.args.total_train_steps)
-        self.output_dir = os.path.join("./results", f"{self.args.output_dir_name}-{time.strftime('%Y%m%d-%H%M%S')}")
+        self.output_dir = os.path.join("./finetune_lyx/results", f"{self.args.output_dir_name}-{time.strftime('%Y%m%d-%H%M%S')}")
         assert not os.path.exists(self.output_dir), f"output directory {self.output_dir} already exists"
         os.makedirs(self.output_dir)
         
