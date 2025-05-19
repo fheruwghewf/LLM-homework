@@ -1,4 +1,4 @@
-python train.py \
+python finetune_lyx/train.py \
     --model_name_or_path gpt2 \
     --max_length 512 \
     --trust_remote_code True \
@@ -6,7 +6,7 @@ python train.py \
     --lora_dim 8 \
     --lora_scaling 32 \
     --lora_module_name h. \
-    --data_path ./data/alpaca_data.json \
+    --data_path ./finetune_lyx/data/alpaca_data.json \
     --epochs 4 \
     --train_batch_size 8 \
     --gradient_accumulation_steps 4 \
@@ -17,4 +17,4 @@ python train.py \
     --eval_batch_size 16 \
     --eval_ratio 0.01 \
     --eval_interval 100 \
-    --output_dir_name gpt2-alpaca
+    --output_dir_name finetune_lyx/gpt2-alpaca
