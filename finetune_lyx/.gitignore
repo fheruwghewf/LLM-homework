@@ -1,2 +1,4 @@
+__pycache__/
+data/
 gpt2_model/
-gpt2_tokenizer/
+gpt2_tokenizer_hf/
