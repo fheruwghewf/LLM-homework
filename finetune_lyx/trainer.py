@@ -38,6 +38,7 @@ class Trainer:
             json.dump(vars(self.args), f, indent=4)
 
     def init_models(self):
+        '''init model, tokenizer and optimizer'''        
         lora_args = None
         if self.args.use_lora:
             lora_args = {"part_module_name": self.args.lora_module_name, "lora_dim": self.args.lora_dim, "lora_scaling": self.args.lora_scaling, "lora_load_path": self.args.lora_load_path}
@@ -82,6 +83,7 @@ class Trainer:
         return self.args.min_lr + coeff * (self.args.max_lr - self.args.min_lr)
 
     def init_datasets(self):
+        '''init dataset'''
         self.train_dataloader, self.eval_dataloader = get_dataloader(
             self.tokenizer, 
             self.args.data_path, 
@@ -120,6 +122,7 @@ class Trainer:
                 loss_accum += loss.detach()
                 loss.backward()
                 if step % self.args.gradient_accumulation_steps == 0:
+                    # epoch
                     update_step = step // self.args.gradient_accumulation_steps
                     lr = self.get_lr(step / self.args.gradient_accumulation_steps)
                     for param_group in self.optimizer.param_groups:
@@ -134,6 +137,7 @@ class Trainer:
                     self.train_loss.append(loss_accum.item())
                     loss_accum = 0.0
                     if update_step % self.args.eval_interval == 0:
+                        # evaluate
                         e_t0 = time.time()
                         e_loss = self.eval()
                         e_t1 = time.time()
