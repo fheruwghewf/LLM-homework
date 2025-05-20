@@ -31,7 +31,7 @@ class LoRALinear(torch.nn.Module):
         ######################################
 
 
-def convert_linear_layer_to_lora(model, part_module_name, lora_dim=0, lora_scaling=1):
+def convert_linear_layer_to_lora(model: transformers.GPT2LMHeadModel, part_module_name, lora_dim=0, lora_scaling=1):
     replace_name = []
     for name, module in model.named_modules():
         if (isinstance(module, torch.nn.Linear) or isinstance(module, transformers.pytorch_utils.Conv1D)) and part_module_name in name:

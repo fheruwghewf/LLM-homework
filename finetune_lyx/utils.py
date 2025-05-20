@@ -49,7 +49,7 @@ def plot_learning_curve(train_data, output_dir):
 
 # The following code is adapted from DeepSpeed's helper.py
 # https://github.com/microsoft/DeepSpeed/blob/master/deepspeed/compression/helper.py
-def recursive_getattr(model, module_name):
+def recursive_getattr(model, module_name: str):
     """
     Recursively get the attribute of a module.
     Args:
@@ -65,7 +65,7 @@ def recursive_getattr(model, module_name):
     return output
 
 
-def recursive_setattr(model, module_name, module):
+def recursive_setattr(model, module_name: str, module):
     """
     Recursively set the attribute of a module.
     Args:

@@ -32,7 +32,7 @@ def smart_tokenizer_and_embedding_resize(
         output_embeddings[-num_new_tokens:] = output_embeddings_avg
 
 
-def get_model_and_tokenizer(model_name_or_path="gpt2", trust_remote_code=False, max_length=1024, use_lora=False, lora_args=None):
+def get_model_and_tokenizer(model_name_or_path="gpt2", trust_remote_code=False, max_length=1024, use_lora=False, lora_args=None) -> tuple[transformers.GPT2LMHeadModel, transformers.GPT2TokenizerFast]:
     # loads from local
     model = transformers.AutoModelForCausalLM.from_pretrained(
         # model_name_or_path,

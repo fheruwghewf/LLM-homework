@@ -118,7 +118,7 @@ class Trainer:
                 labels = batch['labels'].to(self.device)
                 attention_mask = batch['attention_mask'].to(self.device)
                 outputs = self.model(input_ids=input_ids, attention_mask=attention_mask, labels=labels)
-                loss = outputs.loss / self.args.gradient_accumulation_steps
+                loss: torch.Tensor = outputs.loss / self.args.gradient_accumulation_steps
                 loss_accum += loss.detach()
                 loss.backward()
                 if step % self.args.gradient_accumulation_steps == 0:
