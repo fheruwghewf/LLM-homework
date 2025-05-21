@@ -60,9 +60,9 @@ def convert_linear_layer_to_lora(model: transformers.GPT2LMHeadModel, part_modul
 def only_optimize_lora_parameters(model: transformers.GPT2LMHeadModel):
     # TODO: Turn off the gradient of all the parameters except the LoRA parameters
     # raise NotImplementedError
-    for n, m in model.named_modules():
-        if not isinstance(m, LoRALinear):
-            m.requires_grad_(False)
+    for n, p in model.named_parameters():
+        if 'lora' not in n:
+            p.requires_grad_(False)
     return model
     ##############################################################################
 
