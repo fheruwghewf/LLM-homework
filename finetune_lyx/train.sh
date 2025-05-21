@@ -1,4 +1,4 @@
-python finetune_lyx/train.py \
+PYTHONUNBUFFERED=1 python finetune_lyx/train.py \
     --model_name_or_path gpt2 \
     --max_length 512 \
     --trust_remote_code True \
