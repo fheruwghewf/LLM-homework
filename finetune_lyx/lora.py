@@ -76,6 +76,6 @@ def get_lora_state_dict(model: transformers.GPT2LMHeadModel):
             m_sd = m.state_dict()
             k_list = m_sd.keys()
             for k in k_list:
-                sd['.'.join([n, k])] = m_sd
+                sd['.'.join([n, k])] = m_sd[k]
     return sd            
     ########################################################
