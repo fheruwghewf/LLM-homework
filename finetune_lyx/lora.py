@@ -32,7 +32,7 @@ class LoRALinear(torch.nn.Module):
     def forward(self, input):
         # TODO: Implement the forward function
         # raise NotImplementedError
-        size_out = input.size*()[:-1] + (self.weight.shape[0],)
+        size_out = input.size()[:-1] + (self.weight.shape[0],)
         weight_after = torch.addmm(self.weight, self.lora_left_weight , self.lora_right_weight)
         output = torch.addmm(self.bias, input.view(-1, input.size(-1)), weight_after.t())
         output = output.view(size_out)
