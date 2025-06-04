@@ -135,7 +135,7 @@ def main():
     instructions = get_instruction(args.data_path)
     output_dir = os.path.join('./finetune_lyx/results', f"{args.output_dir_name}-{time.strftime('%Y%m%d-%H%M%S')}")
     os.makedirs(output_dir)
-    generate_response(model, tokenizer, instructions, device, output_dir)
+    generate_response(model, tokenizer, instructions, device, output_dir, max_length=500)
     
 if __name__ == "__main__":
     main()

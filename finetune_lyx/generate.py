@@ -91,14 +91,14 @@ def get_instructions():
     ]
 
 
-def generate_response(model, tokenizer, instructions, device, output_dir):
+def generate_response(model, tokenizer, instructions, device, output_dir, max_length=100):
     output_file = f"{output_dir}/response.txt"
     with open(output_file, "w") as f:
         for instruction in instructions:
             prompt = PROMPT_INPUT.format(input=instruction)
             inputs = tokenizer(prompt, return_tensors="pt")
             inputs = {k: v.to(device) for k, v in inputs.items()}
-            output = model.generate(**inputs, temperature=0.7, top_p=0.92, top_k=0, max_length=100, do_sample=True)
+            output = model.generate(**inputs, temperature=0.7, top_p=0.92, top_k=0, max_length=max_length, do_sample=True)
             f.write(tokenizer.decode(output[0], skip_special_tokens=True) + "\n\n")
 
 
