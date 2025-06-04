@@ -1,0 +1,13 @@
+python finetune_lyx/test.py \
+    --model_name_or_path gpt2 \
+    --data_path ./finetune_lyx/data/network_test.json \
+    --max_length 512 \
+    --trust_remote_code True \
+    --use_lora True \
+    --lora_dim 8 \
+    --lora_scaling 32 \
+    --lora_module_name h. \
+    --lora_load_path finetune_lyx/results/gpt2-alpaca-20250521-102149/lora.pt \
+    --seed 42 \
+    --use_cuda False \
+    --output_dir_name gpt2-alpaca-eval
