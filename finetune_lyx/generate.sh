@@ -1,4 +1,4 @@
-python funetune_lyx/generate.py \
+python finetune_lyx/generate.py \
     --model_name_or_path gpt2 \
     --max_length 512 \
     --trust_remote_code True \
