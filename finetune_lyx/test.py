@@ -1,3 +1,6 @@
+
+import os
+import time
 import json
 import argparse
 import torch
@@ -130,7 +133,9 @@ def main():
     print(loss)
 
     instructions = get_instruction(args.data_path)
-    generate_response(model, tokenizer, instructions, device, args.output_dir_name)
+    output_dir = os.path.join('./finetune_lyx/results', f"{args.output_dir_name}-{time.strftime('%Y%m%d-%H%M%S')}")
+    os.makedirs(output_dir)
+    generate_response(model, tokenizer, instructions, device, output_dir)
     
 if __name__ == "__main__":
     main()
