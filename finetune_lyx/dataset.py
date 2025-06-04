@@ -117,7 +117,7 @@ def get_dataloader(tokenizer, data_path, train_batch_size, eval_batch_size, eval
     return train_dataloader, eval_dataloader
 
 def get_test_dataloader(tokenizer, data_path):
-    test_dataset = SupervisedDataset(tokenizer=tokenizer, data_path=data_path, split="train", eval_ratio=0)
+    test_dataset = SupervisedDataset(tokenizer=tokenizer, data_path=data_path, split="eval", eval_ratio=0)
     data_collator = DataCollatorForSupervisedDataset(tokenizer=tokenizer)
     test_dataloader = DataLoader(test_dataset, collate_fn=data_collator, batch_size=1, shuffle=False)
     return test_dataloader

@@ -94,7 +94,7 @@ def test(model: transformers.GPT2LMHeadModel, test_dataloader: torch.utils.data.
         attention_mask = batch['attention_mask'].to(device)
         with torch.no_grad():
             outputs = model(input_ids=input_ids, attention_mask=attention_mask, labels=labels)
-        test_loss.append(outputs.loss)
+        test_loss.append(outputs.loss.item())
     model.train()
     return test_loss
 
