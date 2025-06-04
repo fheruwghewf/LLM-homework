@@ -6,6 +6,7 @@ import transformers
 from utils import str2bool
 from model import get_model_and_tokenizer
 from dataset import get_test_dataloader
+from generate import generate_response
 
 
 def parse_arguments():
@@ -98,6 +99,16 @@ def test(model: transformers.GPT2LMHeadModel, test_dataloader: torch.utils.data.
     model.train()
     return test_loss
 
+def get_instruction(data_path: str) -> list[str]:
+    with open(data_path, 'r', encoding='utf-8') as file:
+        data = json.load(file)
+    instruction = []
+    alpaca: dict
+    for alpaca in data:
+        instruction.append(alpaca['instruction'] + alpaca['input'])
+    
+    return instruction
+
 def main():
     args = parse_arguments()
     torch.manual_seed(args.seed)
@@ -117,6 +128,9 @@ def main():
     test_loader = get_test_dataloader(tokenizer, args.data_path)
     loss = test(model, test_loader, device)
     print(loss)
+
+    instructions = get_instruction(args.data_path)
+    generate_response(model, tokenizer, instructions, device, args.output_dir_name)
     
 if __name__ == "__main__":
     main()

@@ -10,4 +10,4 @@ python finetune_lyx/test.py \
     --lora_load_path finetune_lyx/results/gpt2-alpaca-20250521-102149/lora.pt \
     --seed 42 \
     --use_cuda False \
-    --output_dir_name gpt2-alpaca-eval
+    --output_dir_name gpt2-alpaca-test
