@@ -11,6 +11,8 @@ from model import get_model_and_tokenizer
 from dataset import get_test_dataloader
 from generate import generate_response
 
+from finetune_lyx.utils.json_tools import write_json
+
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Fine-tune a model on a dataset.")
@@ -131,10 +133,13 @@ def main():
     test_loader = get_test_dataloader(tokenizer, args.data_path)
     loss = test(model, test_loader, device)
     print(loss)
+    
 
     instructions = get_instruction(args.data_path)
     output_dir = os.path.join('./finetune_lyx/results', f"{args.output_dir_name}-{time.strftime('%Y%m%d-%H%M%S')}")
     os.makedirs(output_dir)
+
+    write_json(loss, output_dir, 'test_loss.json')
     generate_response(model, tokenizer, instructions, device, output_dir, max_length=500)
     
 if __name__ == "__main__":
