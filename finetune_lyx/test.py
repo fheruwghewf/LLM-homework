@@ -11,7 +11,7 @@ from model import get_model_and_tokenizer
 from dataset import get_test_dataloader
 from generate import generate_response
 
-from finetune_lyx.utils.json_tools import write_json
+from my_utils.json_tools import write_json
 
 
 def parse_arguments():

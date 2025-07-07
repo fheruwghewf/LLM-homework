@@ -4,7 +4,7 @@ import re
 from torchmetrics.text import BLEUScore
 from torchmetrics.text.rouge import ROUGEScore
 
-from finetune_lyx.utils.json_tools import load_json, load_txt, write_json
+from my_utils.json_tools import load_json, load_txt, write_json
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Test a model on a dataset.")
